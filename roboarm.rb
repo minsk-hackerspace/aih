@@ -14,6 +14,18 @@ class Roboarm
     position
   end
 
+  def freeze
+    res = Typhoeus.post(SERVER + '/freeze')
+    puts res.code unless res.code == 200
+    res.body
+  end
+
+  def relax
+    res = Typhoeus.post(SERVER + '/relax')
+    puts res.code unless res.code == 200
+    res.body
+  end
+
   def position=(position)
     res = Typhoeus.post(SERVER + '/setPosition', headers: {position: position, speed: @speed, time: @time})
     puts res.code
@@ -118,35 +130,3 @@ class Position
     @yaw = yaw
   end
 end
-
-t = Time.now
-
-pos0 = Position.new(0.00, -0.0, 0.2, Math::PI, 0, 0)
-pose = [0.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
-arm = Roboarm.new(initial_pose: pose)
-puts arm.position
-arm.open_gripper
-
-pos_int = Position.new(-0, 0.15, 0.5, 3.14, -1.57, 1.57)
-arm.position_no_angle = pos_int
-
-pos_to_take = Position.new(-0.3, 0.3, 0.25, 3.14, -1.57, 1.57)
-arm.position_no_angle = pos_to_take
-arm.close_gripper
-puts arm.position
-
-pos_to_drop = Position.new(0.6, 0.3, 0.25, 3.14, -1.57, 1.57)
-arm.position_no_angle = pos_to_drop
-arm.open_gripper
-puts arm.position
-
-
-arm.position_no_angle = Position.new(0.0272, -0.3185, 0.88848, 3.14, -1.57, 1.57)
-puts arm.position
-arm.open_gripper
-
-# pos_end = Position.new(0.00, -0.0, 0.2, Math::PI, 0, 0)
-# arm.position = pos_end
-
-arm.pose = pose
-p t - Time.now
