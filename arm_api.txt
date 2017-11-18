@@ -1,3 +1,5 @@
+{"point":{"x":0.11309809583640074,"y":-0.27192464496035956,"z":1.0017557037806315},"rotation":{"roll":-0.41522422432899475,"pitch":-1.1038298606872559,"yaw":-2.0262718200683594}}
+
                         case "/getPositionMatrix":
                             FixedMatrix4x4_64F m =
                                     new CorkeKinematicSolver(robot.getDhRobot()).getForwardKinematic(robot.getPose().angles);
