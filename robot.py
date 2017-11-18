@@ -1,6 +1,9 @@
+#!/usr/bin/env python
+
 import json
 import requests
 import numpy as np
+
 
 
 class Position:
@@ -14,7 +17,7 @@ class Position:
 
 
 class Robot:
-    def __init__(self, url='http://100.95.255.181:8080'):
+    def __init__(self, url):
         self.url = url
         self.decoder = json.JSONDecoder()
         self.encoder = json.JSONEncoder()
@@ -44,7 +47,9 @@ class Robot:
         pass
 
     def getPosition(self):
-        res = self._get_json('getPosition')
+        r = requests.get(self.url + '/getPosition')
+        res = r.json()
+        print res
         return Position(res[u'point'][u'x'], res[u'point'][u'y'], res[u'point'][u'z'], res[u'rotation'][u'roll'], res[u'rotation'][u'pitch'], res[u'rotation'][u'yaw'])
 
     def getPositionMatrix(self):
@@ -58,7 +63,7 @@ class Robot:
             ])
 
 
-r = Robot()
+r = Robot('http://100.95.255.181:8080')
 
 pos = r.getPosition()
 print(pos)
