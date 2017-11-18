@@ -1,0 +1,81 @@
+                        case "/getPositionMatrix":
+                            FixedMatrix4x4_64F m =
+                                    new CorkeKinematicSolver(robot.getDhRobot()).getForwardKinematic(robot.getPose().angles);
+                            result = mapper.writeValueAsString(m);
+                            break;
+                        case  "/getPose":
+                            result = onGetPose(mapper);
+                            break;
+                        case "/getPosition":
+                            result = onGetPosition(mapper);
+                            break;
+                        case "/getPhoto":
+                            result = onGetPhoto();
+                            break;
+                        default:
+                            result = "Error: unknown GET request " + request;
+                            break;
+                    }
+                    if (result != null) {
+                        writeResponse(result);
+                    }
+                } else if (inputHeader.containsKey("POST") && inputHeader.get("POST")[0].length() > 1) {
+                    String request = inputHeader.get("POST")[0];
+                    switch (request) {
+                        case "/setPosition":
+                            result = onSetPosition(mapper, inputHeader);
+                            break;
+                        case "/setPose":
+                            result = onSetPose(mapper, inputHeader);
+                            break;
+                        case "/setPositionWithoutAngle":
+                            result = onSetPosition(mapper, inputHeader, false);
+                            break;
+                        case "/openGripper":
+                            result = onOpenGripper(inputHeader);
+                            break;
+                        case "/closeGripper":
+                            result = onCloseGripper(inputHeader);
+                            break;
+                        case "/setSpeed":
+                            result = onSetSpeed(inputHeader);
+                            break;
+                        case "/relax":
+                            robot.relax();
+                            result = "Robot relaxed";
+                            break;
+                        case "/freeze":
+                            robot.freeze();
+                            result = "Robot freezed";
+                            break;
+
+         if (inputHeader.containsKey("speedX:")) {
+                currentSpeedX = Double.parseDouble(inputHeader.get("speedX:")[0]);
+            } else {
+                currentSpeedX = 0;
+            }
+            if (inputHeader.containsKey("speedY:")) {
+                currentSpeedY = Double.parseDouble(inputHeader.get("speedY:")[0]);
+            } else {
+                currentSpeedY = 0;
+            }
+            if (inputHeader.containsKey("speedZ:")) {
+                currentSpeedZ = Double.parseDouble(inputHeader.get("speedZ:")[0]);
+            } else {
+                currentSpeedZ = 0;
+            }
+            if (inputHeader.containsKey("speedRoll:")) {
+                currentRoll = Double.parseDouble(inputHeader.get("speedRoll:")[0]);
+            } else {
+                currentRoll = 0;
+            }
+            if (inputHeader.containsKey("speedPitch:")) {
+                currentPitch = Double.parseDouble(inputHeader.get("speedPitch:")[0]);
+            } else {
+                currentPitch = 0;
+            }
+            if (inputHeader.containsKey("speedYaw:")) {
+                currentYaw = Double.parseDouble(inputHeader.get("speedYaw:")[0]);
+            } else {
+                currentYaw = 0;
+            }
