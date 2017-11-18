@@ -19,8 +19,10 @@ class Position:
 class Robot:
     def __init__(self, url):
         self.url = url
-        self.decoder = json.JSONDecoder()
-        self.encoder = json.JSONEncoder()
+
+    def _post(self, path):
+        res = requests.post(self.url + path)
+        print(res.status_code)
 
     def _get_json(self, command):
         r = requests.get(self.url + '/' + command)
@@ -62,8 +64,15 @@ class Robot:
                 [res[u'a41'], res[u'a42'], res[u'a43'], res[u'a44']]
             ])
 
+    def freeze(self):
+        self._post('/freeze')
+
+    def relax(self):
+        self._post('/relax')
+
 
 r = Robot('http://100.95.255.181:8080')
 
 pos = r.getPosition()
 print(pos)
+
