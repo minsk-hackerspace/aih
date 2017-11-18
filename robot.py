@@ -6,6 +6,11 @@ import numpy as np
 
 
 
+class Pose:
+    def __init__(self, angles):
+        self.angles = angles
+
+
 class Position:
     def __init__(self, x, y, z, roll, pitch, yaw):
         self.x = x
@@ -47,9 +52,18 @@ class Robot:
 
     def getPosition(self):
         r = requests.get(self.url + '/getPosition')
+        print(r.status_code)
         res = r.json()
-        print res
         return Position(res[u'point'][u'x'], res[u'point'][u'y'], res[u'point'][u'z'], res[u'rotation'][u'roll'], res[u'rotation'][u'pitch'], res[u'rotation'][u'yaw'])
+
+    def getPose(self):
+        # {'angles': [-0.0089, 90.0, 0.0027, -89.9973, 89.9987, 0.0013]}
+        r = requests.get(self.url + '/getPose')
+        print(r.status_code)
+        res = r.json()
+        return Pose(res['angles'])
+
+    # angles: [0.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
 
 
     # --- unstable ---
