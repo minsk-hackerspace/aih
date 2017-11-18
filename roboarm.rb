@@ -14,6 +14,18 @@ class Roboarm
     position
   end
 
+  def freeze
+    res = Typhoeus.post(SERVER + '/freeze')
+    puts res.code unless res.code == 200
+    res.body
+  end
+
+  def relax
+    res = Typhoeus.post(SERVER + '/relax')
+    puts res.code unless res.code == 200
+    res.body
+  end
+
   def position=(position)
     res = Typhoeus.post(SERVER + '/setPosition', headers: {position: position, speed: @speed, time: @time})
     puts res.code
@@ -117,5 +129,3 @@ class Position
     @p = p
     @yaw = yaw
   end
-end
-
