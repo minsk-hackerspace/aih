@@ -63,7 +63,14 @@ class Robot:
         res = r.json()
         return Pose(res['angles'])
 
-    # angles: [0.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
+    def setPose(self, pose):
+        if isinstance(pose, Pose):
+            headers = {'angles': str(pose.angles)}
+        else:
+            headers = {'angles': str(pose)}
+        # angles: [0.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
+        # angles: [10.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
+        self._post('/setPose', headers=headers)
 
 
     # --- unstable ---
