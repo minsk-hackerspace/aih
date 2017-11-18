@@ -20,10 +20,39 @@ class Robot:
     def __init__(self, url):
         self.url = url
 
-    def _post(self, path):
-        res = requests.post(self.url + path)
+    def _post(self, path, headers=None):
+        if headers == None:
+            res = requests.post(self.url + path)
+        else:
+            res = requests.post(self.url + path, headers=headers)
         print(res.status_code)
 
+    def _get_power(self, fast=False):
+        if fast:
+            return {'power': '40'}
+        else:
+            return {'power': '5'}
+
+    def openGripper(self, fast=False):
+        self._post('/openGripper', headers=self._get_power(fast))
+
+    def closeGripper(self, fast=False):
+        self._post('/closeGripper', headers=self._get_power(fast))
+
+    def freeze(self):
+        self._post('/freeze')
+
+    def relax(self):
+        self._post('/relax')
+
+    def getPosition(self):
+        r = requests.get(self.url + '/getPosition')
+        res = r.json()
+        print res
+        return Position(res[u'point'][u'x'], res[u'point'][u'y'], res[u'point'][u'z'], res[u'rotation'][u'roll'], res[u'rotation'][u'pitch'], res[u'rotation'][u'yaw'])
+
+
+    # --- unstable ---
     def _get_json(self, command):
         r = requests.get(self.url + '/' + command)
         return r.json()
@@ -37,23 +66,6 @@ class Robot:
         print response
         return self.decoder.decode(response)
 
-    def gotoPosition(self, point, rotation):
-        data = {}
-        self._request_json('gotoPosition', data)
-        pass
-
-    def gotoPositionNoAngle(self, point):
-        pass
-
-    def grip(self, force):
-        pass
-
-    def getPosition(self):
-        r = requests.get(self.url + '/getPosition')
-        res = r.json()
-        print res
-        return Position(res[u'point'][u'x'], res[u'point'][u'y'], res[u'point'][u'z'], res[u'rotation'][u'roll'], res[u'rotation'][u'pitch'], res[u'rotation'][u'yaw'])
-
     def getPositionMatrix(self):
         res = self._get_json('getPositionMatrix')
         return np.array(
@@ -64,11 +76,13 @@ class Robot:
                 [res[u'a41'], res[u'a42'], res[u'a43'], res[u'a44']]
             ])
 
-    def freeze(self):
-        self._post('/freeze')
+    def gotoPosition(self, point, rotation):
+        data = {}
+        self._request_json('gotoPosition', data)
+        pass
 
-    def relax(self):
-        self._post('/relax')
+    def gotoPositionNoAngle(self, point):
+        pass
 
 
 r = Robot('http://100.95.255.181:8080')
