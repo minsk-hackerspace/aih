@@ -22,7 +22,7 @@ class RoboCamera:
         retL, frameL = self.capture_l.retrieve()
         retR, frameR = self.capture_r.retrieve()
 
-        if(!(retR && retL)):
+        if(not(retR and retL)):
             return None
 
         undistorted_rectifiedL = cv2.remap(frameL, self.mapL1, self.mapL2,cv2.INTER_LINEAR)
