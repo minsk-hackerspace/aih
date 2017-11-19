@@ -96,7 +96,7 @@ class Robot:
         # angles: [10.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
         self._post('/setPose', headers=headers)
 
-
+    # numpy
 
     def getPositionMatrix(self):
         res = self._get('/getPositionMatrix')
@@ -109,8 +109,6 @@ class Robot:
             ])
 
     def gotoPosition(self, point, rotation):
-        data = {}
-        self._request_json('gotoPosition', data)
         pass
 
     def gotoPositionNoAngle(self, point):
