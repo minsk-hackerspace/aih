@@ -34,6 +34,12 @@ class RoboCamera:
     def pair_to_3d(point2d_l,point2d_r):
         '''Takes point in the left and right image. Returns point in 3d. 
         Uses camera matrix, etc.'''
+        displacement = point2d_l.x-point2d_l.y
+        camera_matrix = self.camera_matrix_l
+        f_x=camera_matrix[0,0]
+        f_y=camera_matrix[1,1]
+        z=
 
         return np.array([0.5,0.5,0.5,1])
+        
 
