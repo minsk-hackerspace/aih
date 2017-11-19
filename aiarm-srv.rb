@@ -26,6 +26,8 @@ ACTIONS = {
   'яблоко' => [:loork, :get_15__13],
   'apple' => [:loork, :get_15__13],
   'hugg' => [:hugg],
+  'hug' => [:hugg],
+  'hugs' => [:hugg],
   'обними' => [:hugg],
   'обнимашки' => [:hugg],
 }
