@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+"""
+Some notes:
+
+- robot params are POSTed in HTTP headers
+
+"""
+
 import json
 import requests
 import numpy as np
@@ -90,15 +97,6 @@ class Robot:
         self._post('/setPose', headers=headers)
 
 
-    # --- unstable ---
-    def _request_json(self, command, data):
-        data = json.dumps(data)
-        req = urllib2.Request(self.url + '/' + command, data, {'Content-Type': 'application/json'})
-        f = urllib2.urlopen(req)
-        response = f.read()
-        f.close()
-        print response
-        return self.decoder.decode(response)
 
     def getPositionMatrix(self):
         res = self._get('/getPositionMatrix')
@@ -119,8 +117,9 @@ class Robot:
         pass
 
 
-r = Robot('http://100.95.255.181:8080')
+if __name__ == '__main__':
+    r = Robot('http://100.95.255.181:8080')
 
-pos = r.getPosition()
-print(pos)
+    pos = r.getPosition()
+    print(pos)
 
