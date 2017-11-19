@@ -4,6 +4,8 @@ require 'json'
 class Roboarm
   SERVER = '100.95.255.181:8080'
   attr_accessor :speed, :time
+  CAPRURE1 ='100.95.255.181:8090'
+  CAPRURE2 ='100.95.255.181:8091'
 
   def initialize(initial_pose: nil, speed: 100, time: 0)
     @speed = speed
@@ -14,6 +16,13 @@ class Roboarm
     position
   end
 
+  def photos(filename: 'photo', n:)
+      res1 = Typhoeus.get(CAPRURE1 + '?action=snapshot')
+      File.open('photos/'+filename + n.to_s+ '_l' + '.jpg', 'wb') {|f| f.write(res1.body)}
+      res2 = Typhoeus.get(CAPRURE2 + '?action=snapshot')
+      File.open('photos/'+filename + n.to_s + '_r' + '.jpg', 'wb') {|f| f.write(res2.body)}
+    end
+    
   def freeze
     res = Typhoeus.post(SERVER + '/freeze')
     puts res.code unless res.code == 200
