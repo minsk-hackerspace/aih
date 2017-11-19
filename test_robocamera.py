@@ -1,7 +1,7 @@
 import robocamera
 import cv2
 
-cam = robocamera.RoboCamera('http://100.95.255.181:8090/?action=stream','http://100.95.255.181:8091/?action=stream')
+cam = robocamera.RoboCamera('http://100.95.255.181:8090/?action=snapshot','http://100.95.255.181:8091/?action=snapshot')
 
 camL,camR = cam.get_undistorted_images()
 if camL is not None:
