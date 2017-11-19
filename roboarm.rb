@@ -48,7 +48,7 @@ class Roboarm
   end
 
   def pose=(pose)
-    res = Typhoeus.post(SERVER + '/setPose', headers: {angles: pose.to_s, speed: @speed, time: @time}, verbose: true)
+    res = Typhoeus.post(SERVER + '/setPose', headers: {angles: pose.to_s, speed: @speed, time: @time})
     puts res.code unless res.code == 200
     res.body
   end
