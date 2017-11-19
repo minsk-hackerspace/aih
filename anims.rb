@@ -106,7 +106,8 @@ def loork
   @arm.pose = [-20.5938,84.879,8.7142,-28.191699999999997,104.30760000000001,5.0008]
   @arm.pose = [-20.4819,70.7719,54.4887,-62.9009,104.0961,4.9912]
   @arm.pose = [-27.5077,58.5489,83.7364,-86.2805,97.4143,4.9919]
-get  
+  puts 'Done'  
+
 end
 
 def get(x,y)
@@ -119,11 +120,11 @@ def get(x,y)
   @arm.position_no_angle = Position.new(_x, _y, 0.033, 0.05, -3.09, 0)  
   @arm.close_gripper(50)
   @arm.pose = @gpose
-  
+  puts 'Done'
 end
 
-def get_m20_0
-  get(-20,0)
+def get_20_0
+  get(20,0)
 end
 
 def get1
@@ -140,6 +141,7 @@ def drop
   @arm.pose = [-115.7766,113.773,72.8098,-84.7239,117.4871,-0.1091]
   @arm.open_gripper()
   @arm.pose = @inpose
+  puts 'Done'
 end
 
 
