@@ -22,6 +22,7 @@ ACTIONS = {
   'клац' => [:klac],
   'клац-клац' => [:klac,:klac],
   'банан' => [:loork, :get_10_0],
+  'яблоко' => [:loork, :get_15__13],
 }
 
 $anims = RoboAnims.new(server: $server)
