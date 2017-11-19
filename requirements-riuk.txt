@@ -1,0 +1,5 @@
+# console interface
+pip install tdl
+# Fedora
+#dnf install libffi-devel SDL2-devel
+

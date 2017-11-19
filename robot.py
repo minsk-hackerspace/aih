@@ -1,17 +1,36 @@
 #!/usr/bin/env python
 
+"""
+Some notes:
+
+- robot params are POSTed in HTTP headers
+
+"""
+
 import json
 import requests
 import numpy as np
 
 
+class Printable(object):
+    def __str__(self):
+        """ Readable print of object name and properties - str(o)
+        """
+        lines = [self.__class__.__name__]
+        for field, value in self.__dict__.items():
+            lines.append("  " + field + " = " + repr(value))
+        return '\n'.join(lines)
+    def to_json(self):
+        """ Get object properties as indented json """
+        return json.dumps(self, default=lambda o: o.__dict__, indent=4)
 
-class Pose:
+
+class Pose(Printable):
     def __init__(self, angles):
         self.angles = angles
 
 
-class Position:
+class Position(Printable):
     def __init__(self, x, y, z, roll, pitch, yaw):
         self.x = x
         self.y = y
@@ -27,10 +46,15 @@ class Robot:
 
     def _post(self, path, headers=None):
         if headers == None:
-            res = requests.post(self.url + path)
+            r = requests.post(self.url + path)
         else:
-            res = requests.post(self.url + path, headers=headers)
-        print(res.status_code)
+            r = requests.post(self.url + path, headers=headers)
+        print(r.status_code)
+
+    def _get(self, path):
+        r = requests.get(self.url + path)
+        print(r.status_code)
+        return r.json()
 
     def _get_power(self, fast=False):
         if fast:
@@ -51,10 +75,10 @@ class Robot:
         self._post('/relax')
 
     def getPosition(self):
-        r = requests.get(self.url + '/getPosition')
-        print(r.status_code)
-        res = r.json()
-        return Position(res[u'point'][u'x'], res[u'point'][u'y'], res[u'point'][u'z'], res[u'rotation'][u'roll'], res[u'rotation'][u'pitch'], res[u'rotation'][u'yaw'])
+        res = self._get('/getPosition')
+        p = res['point']
+        r = res['rotation']
+        return Position(p['x'], p['y'], p['z'], r['roll'], r['pitch'], r['yaw'])
 
     def getPose(self):
         # {'angles': [-0.0089, 90.0, 0.0027, -89.9973, 89.9987, 0.0013]}
@@ -72,23 +96,10 @@ class Robot:
         # angles: [10.0007, 89.998, 0.002, -89.998, 89.9987, 0.002]
         self._post('/setPose', headers=headers)
 
-
-    # --- unstable ---
-    def _get_json(self, command):
-        r = requests.get(self.url + '/' + command)
-        return r.json()
-
-    def _request_json(self, command, data):
-        data = json.dumps(data)
-        req = urllib2.Request(self.url + '/' + command, data, {'Content-Type': 'application/json'})
-        f = urllib2.urlopen(req)
-        response = f.read()
-        f.close()
-        print response
-        return self.decoder.decode(response)
+    # numpy
 
     def getPositionMatrix(self):
-        res = self._get_json('getPositionMatrix')
+        res = self._get('/getPositionMatrix')
         return np.array(
             [
                 [res[u'a11'], res[u'a12'], res[u'a13'], res[u'a14']],
@@ -98,16 +109,15 @@ class Robot:
             ])
 
     def gotoPosition(self, point, rotation):
-        data = {}
-        self._request_json('gotoPosition', data)
         pass
 
     def gotoPositionNoAngle(self, point):
         pass
 
 
-r = Robot('http://100.95.255.181:8080')
+if __name__ == '__main__':
+    r = Robot('http://100.95.255.181:8080')
 
-pos = r.getPosition()
-print(pos)
+    pos = r.getPosition()
+    print(pos)
 

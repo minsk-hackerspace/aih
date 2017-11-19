@@ -1,3 +1,4 @@
+from robot import Robot
 
 def get_coordinates(obj)
     images = get_undistorted_images
