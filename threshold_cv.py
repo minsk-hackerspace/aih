@@ -85,6 +85,11 @@ imname = basename(sys.argv[1])
 
 im_proc1 = threshold_hsv(im,sys.argv[2])
 
+def find_contour(labels,idx):
+    copy_img = numpy.zeros(labels.shape,dtype='uint8')
+    copy_img[labels==idx]=255
+    im,contours,hierarchy = cv2.findContours(copy_img,cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
+    return contours[0]
 
 def find_min_rect(labels,idx):
     #print contours
@@ -102,6 +107,14 @@ def process_connected_components(img):
             minlen=1
         return float(maxlen)/float(minlen)
 
+    def aspect_ratio2(idx):
+        rect = find_min_rect(labels,idx)
+        sides = rect[1]
+        minlen= min(sides)
+        maxlen=max(sides)
+        if(minlen==0):
+            minlen=1
+        return float(maxlen)/float(minlen)
 
 
     idxs=range(len(centroids))
@@ -110,6 +123,9 @@ def process_connected_components(img):
     idxs = filter(lambda x: stats[x][cv2.CC_STAT_HEIGHT]<300,idxs)
     idxs = filter(lambda x: stats[x][cv2.CC_STAT_WIDTH]<300,idxs)
     idxs = filter (lambda x: aspect_ratio(x)<2.0,idxs)
+    idxs = filter (lambda x: aspect_ratio2(x)<2.0,idxs)
+
+    res_idxs=sorted(idxs, key=lambda x: stats[x][cv2.CC_STAT_AREA],reverse=True)
 
 
     for idx in range(len(centroids)):
@@ -120,7 +136,7 @@ def process_connected_components(img):
         print centroids[idx]
 
     show_img = img.copy()
-    res_centroids = [centroids[idx] for idx in idxs]
+    res_centroids = [centroids[res_idxs[0]]]
     #for idx in idxs:
     #    cv2.circle(show_img,tuple(centroids[idx].astype('uint16')),10,(0,0,255))
     #return show_img
@@ -131,6 +147,7 @@ res_centroids=process_connected_components(im_proc1)
 
 for centroid in res_centroids:
     cv2.circle(im,tuple(centroid.astype('uint16')),10,(0,0,255))
+    cv2.putText(im,sys.argv[2],tuple(centroid.astype('uint16')),cv2.FONT_HERSHEY_SIMPLEX,1.3,(255,255,255))
     
 
-cv2.imwrite('/tmp/res'+imname+'.jpg',im)
+cv2.imwrite('/tmp/res'+imname,im)
