@@ -152,6 +152,10 @@ class RoboAnims
     get(20,0)
   end
 
+  def get_10_0
+    get(10,0)
+  end
+
   def get1
     @arm.pose = @gpose
     @arm.pose = [-28.8548,129.0872,42.7272,-82.726,95.2349,4.9809]
