@@ -73,6 +73,16 @@ def sniff
   
 end
 
+def hugg
+
+  @arm.pose = @inpose  
+  @arm.pose = [-65.3816,88.3109,12.5923,-80.4179,113.0493,-0.0075]  
+  @arm.pose = [-163.5569,101.9922,46.0849,-83.8772,52.5683,-0.105]
+  @arm.pose = [-163.6441,102.4159,46.4426,-86.8436,82.0082,-60]
+  @arm.pose = @inpose      
+  
+end
+
 def cls
   @arm.close_gripper(40)  
 end  
