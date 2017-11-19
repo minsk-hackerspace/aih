@@ -3,9 +3,10 @@ require 'json'
 
 class Roboarm
   SERVER = '100.95.255.181:8080'
-  attr_accessor :speed, :time
+  attr_accessor :speed, :time, :server
 
-  def initialize(initial_pose: nil, speed: 100, time: 0)
+  def initialize(initial_pose: nil, speed: 100, time: 0, server: SERVER)
+    @server = server
     @speed = speed
     @time = time
     @pose = initial_pose
@@ -15,19 +16,19 @@ class Roboarm
   end
 
   def freeze
-    res = Typhoeus.post(SERVER + '/freeze')
+    res = Typhoeus.post(@server + '/freeze')
     puts res.code unless res.code == 200
     res.body
   end
 
   def relax
-    res = Typhoeus.post(SERVER + '/relax')
+    res = Typhoeus.post(@server + '/relax')
     puts res.code unless res.code == 200
     res.body
   end
 
   def position=(position)
-    res = Typhoeus.post(SERVER + '/setPosition', headers: {position: position, speed: @speed, time: @time})
+    res = Typhoeus.post(@server + '/setPosition', headers: {position: position, speed: @speed, time: @time})
     puts res.code
     puts res.body
     @position.parse(res.body)
@@ -35,41 +36,41 @@ class Roboarm
   end
 
   def position_no_angle=(position)
-    res = Typhoeus.post(SERVER + '/setPositionWithoutAngle', headers: {position: position, speed: @speed, time: @time})
+    res = Typhoeus.post(@server + '/setPositionWithoutAngle', headers: {position: position, speed: @speed, time: @time})
     puts res.code unless res.code == 200
     @position.parse(res.body)
     @position
   end
 
   def position
-    res = Typhoeus.get(SERVER + '/getPosition')
+    res = Typhoeus.get(@server + '/getPosition')
     @position.parse(res.body)
     @position
   end
 
   def pose=(pose)
-    res = Typhoeus.post(SERVER + '/setPose', headers: {angles: pose.to_s, speed: @speed, time: @time})
+    res = Typhoeus.post(@server + '/setPose', headers: {angles: pose.to_s, speed: @speed, time: @time})
     puts res.code unless res.code == 200
     res.body
   end
 
   def pose
-    res = Typhoeus.get(SERVER + '/getPose')
+    res = Typhoeus.get(@server + '/getPose')
     puts res.code unless res.code == 200
     res.body
   end
 
   def open_gripper(power = 5)
-    Typhoeus.post(SERVER + '/openGripper', headers: {power: power})
+    Typhoeus.post(@server + '/openGripper', headers: {power: power})
   end
 
   def close_gripper(power = 40)
-    Typhoeus.post(SERVER + '/closeGripper', headers: {power: power})
+    Typhoeus.post(@server + '/closeGripper', headers: {power: power})
   end
 
   def photo(filename= 'photo'+ Time.now.to_s + '.jpg')
     downloaded_file = File.open filename, 'wb'
-    request = Typhoeus::Request.new(SERVER + '/getPhoto')
+    request = Typhoeus::Request.new(@server + '/getPhoto')
     request.on_headers do |response|
       if response.code != 200
         raise 'Download failed'
