@@ -1,11 +1,12 @@
 import robocamera
 import cv2
 
-cam = robocamera.RoboCamera('http://192.168.1.14:8090/?action=stream','http://192.168.1.14:8091/?action=stream')
+cam = robocamera.RoboCamera('http://100.95.255.181:8090/?action=stream','http://100.95.255.181:8091/?action=stream')
 
 camL,camR = cam.get_undistorted_images()
-
-cv2.imwrite('/tmp/camL.jpg',camL)
+if camL is not None:
+    cv2.imwrite('/tmp/camL.jpg',camL)
+    cv2.imwrite('/tmp/camR.jpg',camR)
 
 
 
