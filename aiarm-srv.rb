@@ -25,6 +25,9 @@ ACTIONS = {
   'banan' => [:loork, :get_10_0],
   'яблоко' => [:loork, :get_15__13],
   'apple' => [:loork, :get_15__13],
+  'hugg' => [:hugg],
+  'обними' => [:hugg],
+  'обнимашки' => [:hugg],
 }
 
 $anims = RoboAnims.new(server: $server)
